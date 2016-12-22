@@ -17,7 +17,7 @@ namespace Imacrypt
             foreach (char c in str)
             {
                 bool even = (x + y) % 2 == 0;
-                int random = RgbRandomizer.Next(0, 256);
+                int random = RgbRandomizer.Next(0, 256); //hi
                 img.SetPixel(x, y, Color.FromArgb(255,
                     even ? (c / 256) : random,
                     !even ? (c / 256) : random,
