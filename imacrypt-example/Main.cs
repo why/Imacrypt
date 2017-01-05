@@ -48,6 +48,7 @@ namespace imacrypt_example
                 File.ReadAllBytes(FilePathTxt.Text)
                 .BmpEncrypt()
                 .Save(Path.GetDirectoryName(FilePathTxt.Text) + $"\\encrypted-{DateTime.Now.Ticks}.png");
+
                 Invoke(new MethodInvoker(() =>
                 {
                     ChangeStates(true);
@@ -66,14 +67,21 @@ namespace imacrypt_example
 
             ChangeStates(false);
             StatusLbl.Text = "Decrypting..";
-            new Thread(() =>
-            {
-                using (BinaryWriter bw = new BinaryWriter(
-                    File.Create(
-                        Path.GetDirectoryName(FilePathTxt.Text)
-                        + $"\\decrypted-{DateTime.Now.Ticks}.{1}")))
-                    bw.Write(((Bitmap)Image.FromFile(FilePathTxt.Text)).BmpDecrypt());
-            }).Start();
+
+            var filePath =
+                Path.GetDirectoryName(FilePathTxt.Text) + $"\\decrypted-{DateTime.Now.Ticks}.{FileExtensionBx.Text}";
+
+            Task.Run(() =>
+                {
+                    using (BinaryWriter bw = new BinaryWriter(File.Create(filePath)))
+                        bw.Write(((Bitmap)Image.FromFile(FilePathTxt.Text)).BmpDecrypt());
+
+                    Invoke(new MethodInvoker(() =>
+                    {
+                        ChangeStates(true);
+                        StatusLbl.Text = "Idle";
+                    }));
+                });
         }
     }
 }

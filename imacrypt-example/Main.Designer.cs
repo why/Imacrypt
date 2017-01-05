@@ -35,7 +35,7 @@
             this.FormStatusStrp = new System.Windows.Forms.StatusStrip();
             this.StatusLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.SelectDlg = new System.Windows.Forms.OpenFileDialog();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.FileExtensionBx = new System.Windows.Forms.ComboBox();
             this.FormStatusStrp.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -92,10 +92,10 @@
             this.StatusLbl.Size = new System.Drawing.Size(26, 17);
             this.StatusLbl.Text = "Idle";
             // 
-            // comboBox1
+            // FileExtensionBx
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.FileExtensionBx.FormattingEnabled = true;
+            this.FileExtensionBx.Items.AddRange(new object[] {
             "exe",
             "dll",
             "html",
@@ -107,17 +107,17 @@
             "zip",
             "rar",
             "7z"});
-            this.comboBox1.Location = new System.Drawing.Point(453, 11);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(75, 21);
-            this.comboBox1.TabIndex = 5;
+            this.FileExtensionBx.Location = new System.Drawing.Point(453, 11);
+            this.FileExtensionBx.Name = "FileExtensionBx";
+            this.FileExtensionBx.Size = new System.Drawing.Size(75, 21);
+            this.FileExtensionBx.TabIndex = 5;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 63);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.FileExtensionBx);
             this.Controls.Add(this.FormStatusStrp);
             this.Controls.Add(this.DecryptBtn);
             this.Controls.Add(this.EncryptBtn);
@@ -144,7 +144,7 @@
         private System.Windows.Forms.StatusStrip FormStatusStrp;
         private System.Windows.Forms.ToolStripStatusLabel StatusLbl;
         private System.Windows.Forms.OpenFileDialog SelectDlg;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox FileExtensionBx;
     }
 }
 
