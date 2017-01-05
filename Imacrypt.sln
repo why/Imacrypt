@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imacrypt", "Imacrypt\Imacry
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "imacrypt-example", "imacrypt-example\imacrypt-example.csproj", "{5E3696BF-BA80-4E53-81A2-CCAA28EE1ACE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "temp-test", "temp-test\temp-test.csproj", "{0A857F38-7B05-4E00-9FF7-E7AFEF89069B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{5E3696BF-BA80-4E53-81A2-CCAA28EE1ACE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E3696BF-BA80-4E53-81A2-CCAA28EE1ACE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E3696BF-BA80-4E53-81A2-CCAA28EE1ACE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0A857F38-7B05-4E00-9FF7-E7AFEF89069B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0A857F38-7B05-4E00-9FF7-E7AFEF89069B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0A857F38-7B05-4E00-9FF7-E7AFEF89069B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0A857F38-7B05-4E00-9FF7-E7AFEF89069B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
