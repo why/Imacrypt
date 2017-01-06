@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace imacrypt_example
 {
     public partial class Main : Form
     {
+        private Stopwatch _watch = new Stopwatch();
         public Main()
         {
             InitializeComponent();
@@ -35,6 +37,7 @@ namespace imacrypt_example
 
         private void EncryptBtn_Click(object sender, EventArgs e)
         {
+            _watch.Reset();
             if (!File.Exists(FilePathTxt.Text))
             {
                 MessageBox.Show("This file doesn't exist!");
@@ -43,22 +46,24 @@ namespace imacrypt_example
 
             ChangeStates(false);
             StatusLbl.Text = "Encrypting..";
-            new Thread(() =>
+            Task.Run(() =>
             {
+                _watch.Start();
                 File.ReadAllBytes(FilePathTxt.Text)
                 .BmpEncrypt()
                 .Save(Path.GetDirectoryName(FilePathTxt.Text) + $"\\encrypted-{DateTime.Now.Ticks}.png");
-
+                _watch.Stop();
                 Invoke(new MethodInvoker(() =>
                 {
                     ChangeStates(true);
-                    StatusLbl.Text = "Idle";
+                    StatusLbl.Text = $"Encrypted file in {_watch.ElapsedMilliseconds}ms!";
                 }));
-            }).Start();
+            });
         }
 
         private void DecryptBtn_Click(object sender, EventArgs e)
         {
+            _watch.Reset();
             if (!File.Exists(FilePathTxt.Text))
             {
                 MessageBox.Show("This file doesn't exist!");
@@ -73,13 +78,14 @@ namespace imacrypt_example
 
             Task.Run(() =>
                 {
+                    _watch.Start();
                     using (BinaryWriter bw = new BinaryWriter(File.Create(filePath)))
                         bw.Write(((Bitmap)Image.FromFile(FilePathTxt.Text)).BmpDecrypt());
-
+                    _watch.Stop();
                     Invoke(new MethodInvoker(() =>
                     {
                         ChangeStates(true);
-                        StatusLbl.Text = "Idle";
+                        StatusLbl.Text = $"Decrypted file in {_watch.ElapsedMilliseconds}ms!";
                     }));
                 });
         }
