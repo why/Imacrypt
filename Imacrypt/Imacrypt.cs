@@ -157,7 +157,7 @@ namespace Imacrypt
                             for (int j = currentLine[x + 3]; j > -1; j--)
                             {
                                 //Read the R, G and B values of the current pixel and add them to our list of bytes
-                                //But again, skype the A value because it's not actually part of the original
+                                //But again, skip the A value because it's not actually part of the original
                                 //byte array
                                 if (j != currentLine[x + 3])
                                     result.Add(currentLine[x + j]);
