@@ -1,4 +1,4 @@
-﻿using Imacrypt;
+using Imacrypt;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,12 +11,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using imacrypt_example.Properties;
 
 namespace imacrypt_example
 {
     public partial class Main : Form
     {
-        private Stopwatch _watch = new Stopwatch();
+        private readonly Stopwatch _watch = new Stopwatch();
         public Main()
         {
             InitializeComponent();
@@ -40,23 +41,22 @@ namespace imacrypt_example
             _watch.Reset();
             if (!File.Exists(FilePathTxt.Text))
             {
-                MessageBox.Show("This file doesn't exist!");
+                MessageBox.Show(Resources.FileNotFoundMessage);
                 return;
             }
 
             ChangeStates(false);
-            StatusLbl.Text = "Encrypting..";
+            StatusLbl.Text = Resources.EncryptionInProgressMessage;
             Task.Run(() =>
             {
                 _watch.Start();
-                File.ReadAllBytes(FilePathTxt.Text)
-                .BmpEncrypt()
-                .Save(Path.GetDirectoryName(FilePathTxt.Text) + $"\\encrypted-{DateTime.Now.Ticks}.png");
+                ICrypt.BmpEncrypt(File.ReadAllBytes(FilePathTxt.Text))
+                    .Save(Path.GetDirectoryName(FilePathTxt.Text) + $"\\encrypted-{DateTime.Now.Ticks}.png");
                 _watch.Stop();
                 Invoke(new MethodInvoker(() =>
                 {
                     ChangeStates(true);
-                    StatusLbl.Text = $"Encrypted file in {_watch.ElapsedMilliseconds}ms!";
+                    StatusLbl.Text = string.Format(Resources.EncryptionSuccessMessage, _watch.ElapsedMilliseconds);
                 }));
             });
         }
@@ -66,12 +66,12 @@ namespace imacrypt_example
             _watch.Reset();
             if (!File.Exists(FilePathTxt.Text))
             {
-                MessageBox.Show("This file doesn't exist!");
+                MessageBox.Show(Resources.FileNotFoundMessage);
                 return;
             }
 
             ChangeStates(false);
-            StatusLbl.Text = "Decrypting..";
+            StatusLbl.Text = Resources.DecryptionInProgressMessage;
 
             var filePath =
                 Path.GetDirectoryName(FilePathTxt.Text) + $"\\decrypted-{DateTime.Now.Ticks}.{FileExtensionBx.Text}";
@@ -80,14 +80,23 @@ namespace imacrypt_example
                 {
                     _watch.Start();
                     using (BinaryWriter bw = new BinaryWriter(File.Create(filePath)))
-                        bw.Write(((Bitmap)Image.FromFile(FilePathTxt.Text)).BmpDecrypt());
+                        bw.Write(ICrypt.BmpDecrypt((Bitmap)Image.FromFile(FilePathTxt.Text)));
                     _watch.Stop();
                     Invoke(new MethodInvoker(() =>
                     {
                         ChangeStates(true);
-                        StatusLbl.Text = $"Decrypted file in {_watch.ElapsedMilliseconds}ms!";
+                        StatusLbl.Text = string.Format(Resources.DecryptionSuccessMessage, _watch.ElapsedMilliseconds);
                     }));
                 });
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            List<string> s = new List<string> {"a", "b"};
+            var image = ICrypt.ImageFromObject(s);
+            image.Save("lmao.png");
+            var newList = ICrypt.ImageToObject<List<string>>((Bitmap)Image.FromFile("lmao.png"));
+            MessageBox.Show(newList[1]);
         }
     }
 }
