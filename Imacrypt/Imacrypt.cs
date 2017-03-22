@@ -1,22 +1,23 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Threading.Tasks;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Imacrypt
 {
     /// <summary>
     /// Imacrypt is a small library that lets you encode byte arrays into images, and the other way around.
     /// </summary>
-    public static class Imacrypt
+    public static class ICrypt
     {
         /// <summary>
         /// Returns <see cref="Bitmap"/> containing your encoded array
         /// </summary>
         /// <param name="arr">The array that will be encoded</param>
-        public static Bitmap BmpEncrypt(this byte[] arr)
+        public static Bitmap BmpEncrypt(byte[] arr)
         {
 
             //Initial bitmap size calculations
@@ -109,7 +110,7 @@ namespace Imacrypt
         /// Returns <see cref="byte[]"/> containing your decoded <see cref="Bitmap"/>
         /// </summary>
         /// <param name="b">The <see cref="Bitmap"/> that will be decoded</param>
-        public static byte[] BmpDecrypt(this Bitmap b)
+        public static byte[] BmpDecrypt(Bitmap b)
         {
             //Create list in which we will store all the read bytes
             List<byte> result = new List<byte>((b.Width * b.Height) * 3);
@@ -174,6 +175,52 @@ namespace Imacrypt
             }
             //Finally, we convert the List<byte> back to a byte array and return it
             return result.ToArray();
+        }
+
+        /// <summary>
+        /// Decodes a <see cref="Bitmap"/> that was made using Imacrypt, into any serializable object of type <see cref="T"/>
+        /// </summary>
+        /// <typeparam name="T">The type of object that will be returned</typeparam>
+        /// <param name="b">The <see cref="Bitmap"/> that will be converted to an object of type <see cref="T"/></param>
+        /// <returns></returns>
+        public static T ImageToObject<T>(Bitmap b)
+        {
+            //Check for null, no one likes null
+            if (b == null)
+                throw new NoNullAllowedException();
+            //Initialize a BinaryFormatter
+            BinaryFormatter bf = new BinaryFormatter();
+            //And use a MemoryStream in which we load a byte array containing the contents of our decoded Bitmap
+            using (MemoryStream ms = new MemoryStream(BmpDecrypt(b)))
+            {
+                //Deserialize the byte array back into an object
+                object obj = bf.Deserialize(ms);
+                //Cast the object to T and return it
+                return (T)obj;
+            }
+        }
+
+        /// <summary>
+        /// Encodes a serializable object of type <see cref="T"/> into an Imacrypt <see cref="Bitmap"/>
+        /// </summary>
+        /// <typeparam name="T">The type of object that will be encoded</typeparam>
+        /// <param name="t">Serializable object of type <see cref="T"/></param>
+        /// <returns></returns>
+        public static Bitmap ImageFromObject<T>(T t)
+        {
+            //Check for null, no one likes null
+            if (t == null)
+                throw new NoNullAllowedException();
+            //Initialize a BinaryFormatter
+            BinaryFormatter bf = new BinaryFormatter();
+            //And use a MemoryStream which will later hold our serialized object
+            using (MemoryStream ms = new MemoryStream())
+            {
+                //Serialize T to byte array and store it in the MemoryStream
+                bf.Serialize(ms, t);
+                //Encrypt the byte array into a Bitmap and return it
+                return BmpEncrypt(ms.ToArray());
+            }
         }
     }
 }
